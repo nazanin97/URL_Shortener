@@ -4,8 +4,38 @@ from django.contrib import messages
 from .forms import UserRegisterForm
 from yekta.models import URL
 import random
+import string
 
-longURL = ""
+
+def add(s):
+    k = random.randint(0, len(s) - 1)
+    l = random.choice(string.ascii_letters)
+    x = s[:k] + l + s[k:]
+    return x
+
+def delete(s):
+    k = random.randint(0, len(s) - 1)
+    x = s[:k] + s[k+1:]
+    return x
+
+def edit(s):
+    k = random.randint(0, len(s) - 1)
+    l = random.choice(string.ascii_letters)
+    x = s[:k] + l + s[k+1:]
+    return x
+
+
+def generate_similar_string(myString):
+
+    r = random.randint(1, 3)
+    if r == 1:
+        myString = add(myString)
+    elif r == 2:
+        myString = edit(myString)
+    else:
+        myString = delete(myString)
+    return myString
+
 
 def register(request):
 	if request.method == 'POST':
@@ -36,6 +66,7 @@ def encode(id):
     return "".join(ret[::-1])
 
 
+
 def main(request):
 	id = 1000000+ len(URL.objects.all())
 
@@ -46,9 +77,9 @@ def main(request):
 			return render(request, 'users/main.html')
 
 		
-		# if user didn't enter his own url and wants to save it
-		if request.POST.get('button') == 'save' and request.POST.get('userChosenLink') != '':
-			return render(request, 'users/main.html', {'longURL': request.POST.get('userLink'), 'message': 'Check-your-address-first!'})
+		# if user didn't check his own url and wants to save it
+		if request.POST.get('button') == 'save' and request.POST.get('userChosenLink') != '' and request.POST.get('checkMessage') != 'valid':
+			return render(request, 'users/main.html', {'longURL': request.POST.get('userLink'), 'message': 'Check-your-address-first!', 'data': request.POST.get('userChosenLink')})
 		
 		# if user entered his own url and wants to check it
 		if request.POST.get('button') == 'check' and request.POST.get('userChosenLink') != '':
@@ -56,10 +87,14 @@ def main(request):
 			if len(URL.objects.filter(shortLink=query)) == 0:
 					return render(request, 'users/main.html', {'longURL': request.POST.get('userLink'), 'data': request.POST.get('userChosenLink'), 'message': 'valid'})	
 			else:
-				return render(request, 'users/main.html', {'longURL': request.POST.get('userLink'), 'message': 'invalid'})
-		
+				while True:
+					temp = generate_similar_string("" + request.POST.get('userChosenLink'))
+					query = "http://127.0.0.1:8000/shortener/" + temp
+					if len(URL.objects.filter(shortLink=query)) == 0:
+						return render(request, 'users/main.html', {'longURL': request.POST.get('userLink'), 'data': request.POST.get('userChosenLink'), 'message': 'invalid', 'suggestionLink': temp})
 
-		# if user wants our short link		
+
+		# if user wants us to generate short link		
 		if request.POST.get('button') == 'getShortLink':
 			shorten_url = encode(id)
 			query = "http://127.0.0.1:8000/shortener/" + shorten_url
@@ -69,52 +104,30 @@ def main(request):
 			return render(request, 'users/main.html', {'content': "http://127.0.0.1:8000/shortener/" + shorten_url, 'longURL': request.POST.get('userLink')})
 
 
+		# if user has checked his url and he wants to save that
 		if request.POST.get('button') == 'save' and request.POST.get('userChosenLink') != '' and request.POST.get('checkMessage') == 'valid':
 			URL.objects.create(link=str(request.POST.get('userLink')), shortLink="http://127.0.0.1:8000/shortener/" + request.POST.get('userChosenLink'),
 				numberOfVisits=0, numberOfUsers=0, creator=request.user)
-			return render(request, 'users/main.html')
+			return render(request, 'users/main.html', {'message': ''})
+
+		if request.POST.get('button') == 'save' and request.POST.get('checkMessage') == 'invalid':
+			
+			return render(request, 'users/main.html', {'longURL': request.POST.get('userLink'), 'data': request.POST.get('userChosenLink'), 'message': 'invalid'})
 
 
+		# if user wants to save our short link
 		if request.POST.get('button') == 'save' and request.POST.get('ourShortLink') != '':
 			URL.objects.create(link=request.POST.get('userLink'), shortLink="http://127.0.0.1:8000/shortener/" + request.POST.get('ourShortLink'),
 				numberOfVisits=0, numberOfUsers=0, creator=request.user)
-			return render(request, 'users/main.html')
+			return render(request, 'users/main.html', {'message': ''})
 
-		
 		else:
 			return render(request, 'users/main.html')
-		# if request.POST.get('userChosenLink') == '' and request.POST.get('button') == 'save':
-		# 	return render(request, 'users/main.html')
-
-		# if request.POST.get('userChosenLink') == '' and request.POST.get('button') == 'check':
-		# 	return render(request, 'users/main.html')	
-
-		# if 'userLink' in request.POST:
-		# 	return render(request, 'users/main.html', {'content': "http://127.0.0.1:8000/shortener/" + shorten_url, 'longURL': request.POST.get('userLink')})
-	
-		
-		
-		# if 'save' in request.POST:
-		# 	URL.objects.create(link=str(request.POST.get('userLink')), shortLink="http://127.0.0.1:8000/shortener/" + shorten_url,
-		# 		numberOfVisits=0, numberOfUsers=0, creator=request.user)
-		
-		# 	return render(request, 'users/main.html')
-		# 	# URL.objects.create(link=str(longURL), shortLink="http://127.0.0.1:8000/shortener/" + shorten_url,
-		# 	# 	numberOfVisits=0, numberOfUsers=0)
-		
-		# if 'userChosenLink' in request.POST:
-		# 	if request.POST.get('userLink') != '':
-				
-		# 		if len(URL.objects.filter(shortLink="http://127.0.0.1:8000/shortener/" + request.POST.get('userChosenLink'))) != 0:
-		# 			return render(request, 'users/main.html', {'content': "http://127.0.0.1:8000/shortener/" + shorten_url, 'message': 'try another address!'})
-		# 		else:
-		# 			URL.objects.filter(creator=request.user, link=shorten_url).update(field1='some value')
 
 		
 	else:
 		return render(request, 'users/main.html')
  
-
 
 @login_required
 def profile(request):
