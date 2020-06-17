@@ -75,9 +75,15 @@ def main(request):
 
 		# if user didn't enter anything, don't do anything
 		if request.POST.get('userLink') == '':
+			messages.error(request, 'Enter your long URL first!')
 			return render(request, 'users/main.html')
 
-		
+
+		# duplicate long URL
+		if len(URL.objects.filter(link=request.POST.get('userLink'))) != 0:
+			messages.error(request, 'URL found in Database!')
+			return render(request, 'users/main.html')
+
 		# if user didn't check his own url and wants to save it
 		if request.POST.get('button') == 'save' and request.POST.get('userChosenLink') != '' and request.POST.get('checkMessage') != 'valid':
 			return render(request, 'users/main.html', {'longURL': request.POST.get('userLink'), 'message': 'Check-your-address-first!', 'data': request.POST.get('userChosenLink')})
@@ -137,6 +143,3 @@ def profile(request):
 	userURLs = URL.objects.filter(creator=request.user)
 	print(userURLs)
 	return render(request, 'users/profile.html', {'urls': userURLs})
-
-
-

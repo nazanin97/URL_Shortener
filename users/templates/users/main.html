@@ -5,7 +5,7 @@
   {% csrf_token %}
   <div class="input-group mb-3">
 
-    <input type="text" class="form-control" aria-describedby="basic-addon2" name="userLink" value={{longURL}}>
+    <input type="text" class="form-control" aria-describedby="basic-addon2" name="userLink" placeholder="Enter long URL" value={{longURL}}>
     <button type="submit" class="btn btn-primary" value="getShortLink" name="button">Get short link</button>
   </div>
   <hr/>
@@ -21,7 +21,7 @@
   <br/>
   <div class="input-group mb-3">
     <span class="input-group-text" id="basic-addon3">http://127.0.0.1:8000/shortener/</span>
-    <input type="text" class="form-control" id="ex3" aria-describedby="basic-addon2" name="userChosenLink" value={{data}}>
+    <input type="text" class="form-control" id="ex3" aria-describedby="basic-addon2" name="userChosenLink" placeholder="my URL" value={{data}}>
     <button class="btn btn-primary" type="submit" name="button" value="check">Check</button>
   </div>
   {% if message %}
