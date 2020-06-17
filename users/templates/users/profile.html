@@ -1,17 +1,21 @@
+
 {% extends "yekta/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-{% for post in posts %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ post.author }}</a>
-              <small class="text-muted">{{ post.date_posted }}</small>
-            </div>
-            <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
-            <p class="article-content">{{ post.content }}</p>
-          </div>
-        </article>
-    {% endfor %}
-{% endblock content %}
 
+    <div class="content-section">
+      <div class="media">
+        
+        <div class="media-body">
+          <h2 class="account-heading">{{ user.id }}</h2>
+    	  <ul>
+    		{% for item in urls %}
+    			<li>{{ item.link }}</li>
+    		{% endfor %}
+		 </ul>
+        </div>
+
+      </div>
+      <!-- FORM HERE -->
+    </div>
+{% endblock content %}

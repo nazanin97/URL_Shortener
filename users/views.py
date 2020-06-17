@@ -5,6 +5,9 @@ from .forms import UserRegisterForm
 from yekta.models import URL
 
 
+
+
+
 def register(request):
 	if request.method == 'POST':
 		form = UserRegisterForm(request.POST)
@@ -57,8 +60,9 @@ def main(request):
 
 @login_required
 def profile(request):
-    return render(request, 'users/profile.html')
-
+	userURLs = URL.objects.filter(creator=request.user)
+	print(userURLs)
+	return render(request, 'users/profile.html', {'urls': userURLs})
 
 
 
