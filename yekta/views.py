@@ -26,7 +26,10 @@ def home(request):
 
 def about(request):
     if request.method == 'POST':
-        result = URL.objects.filter(shortLink=request.POST['userReq']).first()
-        return render(request, 'yekta/about.html', {'content': result.link})
+        result = URL.objects.filter(shortLink=request.POST['userReq'])
+        if len(result) == 0:
+            return render(request, 'yekta/about.html', {'title': 'Redirect'})
+        else:
+            return render(request, 'yekta/about.html', {'content': result.first().link, 'device': request.headers, 'browser': request.headers})
     else:    
-	    return render(request, 'yekta/about.html', {'title': 'About'})
+	    return render(request, 'yekta/about.html', {'title': 'Redirect'})
