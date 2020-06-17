@@ -5,15 +5,19 @@
 
     <div class="content-section">
       <div class="media">
-        
+        <h2 class="account-heading">{{ user.username }}</h2> 
         <div class="media-body">
-          <h2 class="account-heading">{{ user.id }}</h2>
-    	  <ul>
-    		{% for item in urls %}
-    			<li>{{ item.link }}</li>
-    		{% endfor %}
-		 </ul>
+          <ul>
+	    		{% for item in urls %}
+	    			<div>
+	    				<li>{{ item.shortLink }}</li>
+	    				<li>number of total visits: {{item.numberOfVisits}}</li>
+	    			</div>
+	    		{% endfor %}
+		 	</ul>
         </div>
+		
+			
 
       </div>
       <!-- FORM HERE -->

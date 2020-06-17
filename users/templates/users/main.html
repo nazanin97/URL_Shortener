@@ -1,23 +1,69 @@
 {% extends "yekta/base.html" %}
 {% block content %}
-   <form method="POST">
+<!--    <form method="POST">
    	{% csrf_token %}
   <div class="mb-3">
   	<h3>Enter long URL!</h3>
   	<hr/>
-  <input type="text" class="form-control" aria-describedby="basic-addon2" name="userLink">
+  <input type="text" class="form-control" aria-describedby="basic-addon2" name="userLink" value={{longURL}}>
   <div class="input-group">
     <button type="submit" class="btn btn-primary">Get short link</button>
   </div>
 </div>
 </form>
+<hr/>
 <div>
 	<h2>{{ content }}</h2>
-	 <form method="POST">
-	 	{% csrf_token %}
-	 	 <input type="hidden" class="form-control" aria-describedby="basic-addon2" name="save">
-		<button type="submit" class="btn btn-primary">Save</button>
-	</form>
+  {% if content %}
+    <form method="POST">
+    {% csrf_token %}
+     <input type="hidden" class="form-control" aria-describedby="basic-addon2" name="save">
+    <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+      <hr />
+  <h3>Enter your chosen URL</h3>
+  <form class="form-inline" method="POST">
+    {% csrf_token %}
+    <span class="input-group-text" id="basic-addon3">http://127.0.0.1:8000/shortener/</span>
+
+    <input type="text" class="form-control" id="ex3" aria-describedby="basic-addon2" name="userChosenLink">
+
+    <button class="btn btn-primary" type="submit">Check</button>
+
+  </form>
+  {% endif %}
+	 <h3>{{ message }}</h3>
 </div>
+ -->
+
+<form method="POST">
+  {% csrf_token %}
+  <div class="input-group mb-3">
+
+    <input type="text" class="form-control" aria-describedby="basic-addon2" name="userLink" value={{longURL}}>
+    <button type="submit" class="btn btn-primary" value="getShortLink" name="button">Get short link</button>
+  </div>
+  <hr/>
+  <!-- <h3 name="ourShortLink">{{content}}</h3> -->
+  <!-- {% if content%} -->
+  <input readonly="readonly" class="form-control" id="ex3" type="text" value={{content}} name="ourShortLink">
+  <!-- {% endif %} -->
+  
+  <br/>
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon3">http://127.0.0.1:8000/shortener/</span>
+    <input type="text" class="form-control" id="ex3" aria-describedby="basic-addon2" name="userChosenLink" value={{data}}>
+    <button class="btn btn-primary" type="submit" name="button" value="check">Check</button>
+  </div>
+  <!-- {% if message %} -->
+  <input readonly="readonly" class="form-control" id="ex3" type="text" value={{message}} name="checkMessage">
+  <!-- {% endif %} -->
+  <!-- <h2>{{message}}</h2> -->
+  <br/>
+  <div>
+    <button type="submit" class="btn btn-primary" value="save" name="button">Save</button>
+  </div>
+  
+</form>
 
 {% endblock content %}
