@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import URL
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 def home(request):
     
@@ -13,6 +14,7 @@ def about(request):
     if request.method == 'POST':
         result = URL.objects.filter(shortLink=request.POST['userReq'])
         if len(result) == 0:
+            messages.warning(request, 'Invalid URL!')
             return render(request, 'yekta/about.html', {'title': 'Redirect'})
         else:
             
@@ -32,7 +34,6 @@ def about(request):
                 
             result.save()    
             return HttpResponseRedirect(result.link)
-
             # return render(request, 'yekta/about.html', {'content': result.link, 'device': request.headers})
     else:    
 	    return render(request, 'yekta/about.html', {'title': 'Redirect'})
