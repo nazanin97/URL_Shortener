@@ -19,7 +19,11 @@ def register(request):
 	
 	return render(request, 'users/register.html', {'form': form})
 
-
+def main(request):
+	if request.method == 'POST':
+		return render(request, 'users/main.html', {'content': request.POST['userLink']})
+	else:    
+	    return render(request, 'users/main.html')
 
 @login_required
 def profile(request):

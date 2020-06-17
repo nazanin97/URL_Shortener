@@ -18,10 +18,11 @@ posts = [
 
 
 def home(request):
-	context = {
-        'posts': URL.objects.all()
-    }
-	return render(request, 'yekta/home.html', context)
+    return render(request, 'yekta/home.html')
+	# context = {
+ #        'posts': URL.objects.all()
+ #    }
+	# return render(request, 'yekta/home.html', context)
 
 def about(request):
     if request.method == 'POST':
