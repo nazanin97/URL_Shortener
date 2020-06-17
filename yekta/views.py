@@ -14,6 +14,19 @@ def about(request):
         if len(result) == 0:
             return render(request, 'yekta/about.html', {'title': 'Redirect'})
         else:
-            return render(request, 'yekta/about.html', {'content': result.first().link, 'device': request.headers, 'browser': request.headers['User-Agent']})
+            
+            result = result.first()
+            result.numberOfVisits += 1
+            
+            if "Chrome" in request.headers['User-Agent']:
+                result.numChrome += 1
+            elif "Firefox" in request.headers['User-Agent']:
+                result.numFirefox += 1
+            else:
+                result.numSafari += 1
+                
+            result.save()    
+
+            return render(request, 'yekta/about.html', {'content': result.link, 'device': request.headers})
     else:    
 	    return render(request, 'yekta/about.html', {'title': 'Redirect'})
