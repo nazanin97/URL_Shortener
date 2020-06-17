@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import URL
+from django.http import HttpResponseRedirect
 
 def home(request):
     
@@ -17,7 +18,11 @@ def about(request):
             
             result = result.first()
             result.numberOfVisits += 1
-            
+            if "Mobi" in request.headers['User-Agent']:
+                result.numMobile += 1
+            else:
+                result.numDesktop += 1
+
             if "Chrome" in request.headers['User-Agent']:
                 result.numChrome += 1
             elif "Firefox" in request.headers['User-Agent']:
@@ -26,7 +31,8 @@ def about(request):
                 result.numSafari += 1
                 
             result.save()    
+            return HttpResponseRedirect(result.link)
 
-            return render(request, 'yekta/about.html', {'content': result.link, 'device': request.headers})
+            # return render(request, 'yekta/about.html', {'content': result.link, 'device': request.headers})
     else:    
 	    return render(request, 'yekta/about.html', {'title': 'Redirect'})

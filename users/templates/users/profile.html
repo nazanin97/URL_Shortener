@@ -3,20 +3,23 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-    <div class="content-section">
+    <div>
       <div class="media">
         <!-- <h2 class="account-heading">{{ user.username }}</h2>  -->
-        <div class="media-body">
+        <div>
         	{% for item in urls %}
           		<ul class="list-group">
 	    		
-	    
+	    			<li class="list-group-item">Long URL: {{ item.link }}</li>
     				<li class="list-group-item">Short URL: {{ item.shortLink }}</li>
-    				<li class="list-group-item">Total visits: {{item.numberOfVisits}}</li>
-    				<li class="list-group-item">Visits from Chrome: {{item.numChrome}}</li>
-    				<li class="list-group-item">Visits from Safari: {{item.numSafari}}</li>
-    				<li class="list-group-item">Visits from Firefox: {{item.numFirefox}}</li>
-	    	
+    				<br/>
+    				<ul class="list-group">Total visits: {{item.numberOfVisits}}
+	    				<li class="list-group-item">Visits from Chrome: {{item.numChrome}}</li>
+	    				<li class="list-group-item">Visits from Safari: {{item.numSafari}}</li>
+	    				<li class="list-group-item">Visits from Firefox: {{item.numFirefox}}</li>
+	    				<li class="list-group-item">Visits from Mobile: {{item.numMobile}}</li>
+	    				<li class="list-group-item">Visits from Desktop: {{item.numDesktop}}</li>
+	    			</ul>
 		 		</ul>
 		 		<br />
 		 	{% endfor %}

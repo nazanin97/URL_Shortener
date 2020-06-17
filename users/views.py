@@ -68,7 +68,8 @@ def encode(id):
 
 
 def main(request):
-	id = 1000000+ len(URL.objects.all())
+	
+	id = random.randint(10 ** 6,10 ** 20) + len(URL.objects.all())
 
 	if request.method == 'POST':
 
@@ -106,8 +107,9 @@ def main(request):
 
 		# if user has checked his url and he wants to save that
 		if request.POST.get('button') == 'save' and request.POST.get('userChosenLink') != '' and request.POST.get('checkMessage') == 'valid':
-			URL.objects.create(link=str(request.POST.get('userLink')), shortLink="http://127.0.0.1:8000/shortener/" + request.POST.get('userChosenLink'),
+			URL.objects.create(link=str(request.POST.get('userLink')), shortLink= "http://127.0.0.1:8000/shortener/" + request.POST.get('userChosenLink'),
 				numberOfVisits=0, numberOfUsers=0, creator=request.user)
+			messages.success(request, f'New URL created !')
 			return render(request, 'users/main.html', {'message': ''})
 
 		if request.POST.get('button') == 'save' and request.POST.get('checkMessage') == 'invalid':
@@ -117,8 +119,9 @@ def main(request):
 
 		# if user wants to save our short link
 		if request.POST.get('button') == 'save' and request.POST.get('ourShortLink') != '':
-			URL.objects.create(link=request.POST.get('userLink'), shortLink="http://127.0.0.1:8000/shortener/" + request.POST.get('ourShortLink'),
+			URL.objects.create(link=request.POST.get('userLink'), shortLink= request.POST.get('ourShortLink'),
 				numberOfVisits=0, numberOfUsers=0, creator=request.user)
+			messages.success(request, f'New URL created !')
 			return render(request, 'users/main.html', {'message': ''})
 
 		else:

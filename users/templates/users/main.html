@@ -1,40 +1,5 @@
 {% extends "yekta/base.html" %}
 {% block content %}
-<!--    <form method="POST">
-   	{% csrf_token %}
-  <div class="mb-3">
-  	<h3>Enter long URL!</h3>
-  	<hr/>
-  <input type="text" class="form-control" aria-describedby="basic-addon2" name="userLink" value={{longURL}}>
-  <div class="input-group">
-    <button type="submit" class="btn btn-primary">Get short link</button>
-  </div>
-</div>
-</form>
-<hr/>
-<div>
-	<h2>{{ content }}</h2>
-  {% if content %}
-    <form method="POST">
-    {% csrf_token %}
-     <input type="hidden" class="form-control" aria-describedby="basic-addon2" name="save">
-    <button type="submit" class="btn btn-primary">Save</button>
-    </form>
-      <hr />
-  <h3>Enter your chosen URL</h3>
-  <form class="form-inline" method="POST">
-    {% csrf_token %}
-    <span class="input-group-text" id="basic-addon3">http://127.0.0.1:8000/shortener/</span>
-
-    <input type="text" class="form-control" id="ex3" aria-describedby="basic-addon2" name="userChosenLink">
-
-    <button class="btn btn-primary" type="submit">Check</button>
-
-  </form>
-  {% endif %}
-	 <h3>{{ message }}</h3>
-</div>
- -->
 
 <form method="POST">
   {% csrf_token %}
@@ -45,9 +10,13 @@
   </div>
   <hr/>
 
-  <!-- {% if content%} -->
-  <input readonly="readonly" class="form-control" id="ex3" type="text" value={{content}} name="ourShortLink">
-  <!-- {% endif %} -->
+ {% if content %}
+    <input readonly="readonly" class="form-control" id="ex3" type="text" value={{content}} name="ourShortLink">
+  {% else %}
+    <input readonly="readonly" class="form-control" id="ex3" type="text" value="" name="ourShortLink">
+  {% endif %}
+
+
   
   <br/>
   <div class="input-group mb-3">

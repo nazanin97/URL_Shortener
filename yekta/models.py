@@ -12,5 +12,7 @@ class URL(models.Model):
 	numFirefox = models.IntegerField(default=0)
 	numChrome = models.IntegerField(default=0)
 	numSafari = models.IntegerField(default=0)
+	numMobile = models.IntegerField(default=0)
+	numDesktop = models.IntegerField(default=0)
 
 
