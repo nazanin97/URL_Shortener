@@ -24,4 +24,7 @@ def home(request):
 	return render(request, 'yekta/home.html', context)
 
 def about(request):
-	return render(request, 'yekta/about.html', {'title': 'About'})
+    if request.method == 'POST':
+        return render(request, 'yekta/about.html', {'content': request.POST['userReq']})
+    else:    
+	    return render(request, 'yekta/about.html', {'title': 'About'})
