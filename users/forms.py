@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model
+from django.contrib.auth.backends import ModelBackend
+from django.db.models import Q
 
 
 class UserRegisterForm(UserCreationForm):
@@ -12,6 +15,7 @@ class UserRegisterForm(UserCreationForm):
 
 
 
+            
     # def save(self, commit=True):
     #     user = super(UserCreationForm, self).save(commit=False)
     #     user.email = self.cleaned_data["email"]

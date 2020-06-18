@@ -1,3 +1,4 @@
+from django.db.models import Count, Subquery
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -139,45 +140,17 @@ def main(request):
 		return render(request, 'users/main.html')
  
 
+
 @login_required
 def profile(request):
+
 	userURLs = URL.objects.filter(creator=request.user)
-	userShortLinks = URL.objects.filter(creator=request.user).values_list('shortLink', flat=True)
-	reqLogItems = []
-	allIPs = []
-	# for obj in RequestLog.objects.all():
-	# 	if obj.link in userShortLinks:
-	# 		for sub in reqLogItems:
-	# 			allIPs.append(sub['ip'])
+	q = RequestLog.objects.filter(link__in=Subquery(userURLs.values('shortLink'))).values('link','ip').annotate(Count('ip', distinct=True))
+	q2 = RequestLog.objects.filter(link__in=Subquery(userURLs.values('shortLink'))).values('link','browser', 'ip').annotate(Count('ip', distinct=True))
+	q3 = RequestLog.objects.filter(link__in=Subquery(userURLs.values('shortLink'))).values('link','device', 'ip').annotate(Count('ip', distinct=True))
+	
 
-	# 	# allIPs = [ sub['ip'] for sub in reqLogItems ]
-	# 	# allIPs = set(allIPs) 
-	# 		if obj.ip not in allIPs:
-	# 			reqLogItems.append(obj)
-
-	numChrome = 0
-	numSafari = 0
-	numFirefox = 0
-	numMobile = 0
-	numDesktop = 0
-	for item in reqLogItems:
-		if item.browser == 'Chrome':
-			numChrome += 1
-		elif item.browser == "Safari":
-			numSafari += 1
-		else:
-			numFirefox += 1	
-		
-		if item.device == "Mobile":
-			numMobile += 1
-		else:
-			numDesktop += 1
-
-	total = numMobile + numDesktop
-
-	return render(request, 'users/profile.html', {'urls': userURLs, 'total': total, 'numChrome': numChrome, 'numSafari': numSafari, 'numFirefox': numFirefox, 'numMobile': numMobile, 'numDesktop': numDesktop})
-
-
+	return render(request, 'users/profile.html', {'ips': q, 'clients': q2, 'devices': q3, 'urls': userURLs})
 
 
 

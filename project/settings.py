@@ -127,3 +127,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'main-home'
 
 LOGIN_URL = 'login'
+
+AUTHENTICATION_BACKENDS = ['users.backends.EmailBackend']

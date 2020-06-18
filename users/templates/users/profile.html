@@ -1,13 +1,12 @@
-
 {% extends "yekta/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
 
     <div>
       <div class="media">
-        <!-- <h2 class="account-heading">{{ user.username }}</h2>  -->
+  
         <div>
-
+			<h3>All visits</h3>
         	{% for item in urls %}
 
           		<ul class="list-group">
@@ -21,10 +20,43 @@
 	    				<li class="list-group-item">Visits from Firefox: {{item.numFirefox}}</li>
 	    				<li class="list-group-item">Visits from Mobile: {{item.numMobile}}</li>
 	    				<li class="list-group-item">Visits from Desktop: {{item.numDesktop}}</li>
+	    				<!-- <li class="list-group-item">test: {{test}}</li> -->
 	    			</ul>
-	    
-		 		
-	
+				</ul>
+		 		<hr />
+		 	{% endfor %}
+
+		 	<h3>Visits by different users</h3>
+        	{% for item in ips %}
+        	<ul class="list-group">
+				<li class="list-group-item">Short link: {{ item.link }}</li>
+				<li class="list-group-item">Visits by different users: {{ item.ip__count }}</li>
+			</ul>
+			<br />
+			{% endfor %}
+
+
+			{% for item in clients %}
+			<ul class="list-group">
+				<li class="list-group-item">Short link: {{ item.link }}</li>
+				<li class="list-group-item">Browser: {{ item.browser }}</li>
+				<li class="list-group-item">num: {{ item.ip__count }}</li>
+			</ul>
+			<br />
+			{% endfor %}
+			
+			{% for item in devices %}
+			<ul class="list-group">
+				<li class="list-group-item">Short link: {{ item.link }}</li>
+				<li class="list-group-item">Device: {{ item.device }}</li>
+				<li class="list-group-item">num: {{ item.ip__count }}</li>
+			</ul>
+			<br />
+			{% endfor %}
+
+        	
+
+		 	<!-- {% for item in urls2 %}
 					<ul class="list-group">Visits by different users: {{ total }}
 	    				<li class="list-group-item">Visits from Chrome: {{ numChrome }}</li>
 	    				<li class="list-group-item">Visits from Safari: {{ numSafari }}</li>
@@ -32,15 +64,12 @@
 	    				<li class="list-group-item">Visits from Mobile: {{ numMobile }}</li>
 	    				<li class="list-group-item">Visits from Desktop: {{ numDesktop }}</li>
 	    			</ul>
-	
-				</ul>
-		 		<hr />
-		 	{% endfor %}
+		 	{% endfor %} -->
         </div>
 		
 			
 
       </div>
-      <!-- FORM HERE -->
+
     </div>
 {% endblock content %}
