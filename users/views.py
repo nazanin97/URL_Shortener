@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import UserRegisterForm
 from yekta.models import URL
+from yekta.models import RequestLog
 import random
 import string
 
@@ -13,10 +14,12 @@ def add(s):
     x = s[:k] + l + s[k:]
     return x
 
+
 def delete(s):
     k = random.randint(0, len(s) - 1)
     x = s[:k] + s[k+1:]
     return x
+
 
 def edit(s):
     k = random.randint(0, len(s) - 1)
@@ -45,7 +48,6 @@ def register(request):
 			username = form.cleaned_data.get('username')
 			messages.success(request, f'Account created for {username}!')
 			return redirect('login')
-
 	else:
 		form = UserRegisterForm()
 	
@@ -64,7 +66,6 @@ def encode(id):
         id = id // base
     # since ret has reversed order of base62 id, reverse ret before return it
     return "".join(ret[::-1])
-
 
 
 def main(request):
@@ -95,7 +96,7 @@ def main(request):
 					return render(request, 'users/main.html', {'longURL': request.POST.get('userLink'), 'data': request.POST.get('userChosenLink'), 'message': 'valid'})	
 			else:
 				while True:
-					temp = generate_similar_string("" + request.POST.get('userChosenLink'))
+					temp = generate_similar_string(request.POST.get('userChosenLink'))
 					query = "http://127.0.0.1:8000/shortener/" + temp
 					if len(URL.objects.filter(shortLink=query)) == 0:
 						return render(request, 'users/main.html', {'longURL': request.POST.get('userLink'), 'data': request.POST.get('userChosenLink'), 'message': 'invalid', 'suggestionLink': temp})
@@ -141,5 +142,57 @@ def main(request):
 @login_required
 def profile(request):
 	userURLs = URL.objects.filter(creator=request.user)
-	print(userURLs)
-	return render(request, 'users/profile.html', {'urls': userURLs})
+	userShortLinks = URL.objects.filter(creator=request.user).values_list('shortLink', flat=True)
+	reqLogItems = []
+	allIPs = []
+	# for obj in RequestLog.objects.all():
+	# 	if obj.link in userShortLinks:
+	# 		for sub in reqLogItems:
+	# 			allIPs.append(sub['ip'])
+
+	# 	# allIPs = [ sub['ip'] for sub in reqLogItems ]
+	# 	# allIPs = set(allIPs) 
+	# 		if obj.ip not in allIPs:
+	# 			reqLogItems.append(obj)
+
+	numChrome = 0
+	numSafari = 0
+	numFirefox = 0
+	numMobile = 0
+	numDesktop = 0
+	for item in reqLogItems:
+		if item.browser == 'Chrome':
+			numChrome += 1
+		elif item.browser == "Safari":
+			numSafari += 1
+		else:
+			numFirefox += 1	
+		
+		if item.device == "Mobile":
+			numMobile += 1
+		else:
+			numDesktop += 1
+
+	total = numMobile + numDesktop
+
+	return render(request, 'users/profile.html', {'urls': userURLs, 'total': total, 'numChrome': numChrome, 'numSafari': numSafari, 'numFirefox': numFirefox, 'numMobile': numMobile, 'numDesktop': numDesktop})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -7,21 +7,34 @@
       <div class="media">
         <!-- <h2 class="account-heading">{{ user.username }}</h2>  -->
         <div>
+
         	{% for item in urls %}
+
           		<ul class="list-group">
 	    		
 	    			<li class="list-group-item">Long URL: {{ item.link }}</li>
     				<li class="list-group-item">Short URL: {{ item.shortLink }}</li>
     				<br/>
-    				<ul class="list-group">Total visits: {{item.numberOfVisits}}
+    				<ul class="list-group">Total Visits: {{item.numberOfVisits}}
 	    				<li class="list-group-item">Visits from Chrome: {{item.numChrome}}</li>
 	    				<li class="list-group-item">Visits from Safari: {{item.numSafari}}</li>
 	    				<li class="list-group-item">Visits from Firefox: {{item.numFirefox}}</li>
 	    				<li class="list-group-item">Visits from Mobile: {{item.numMobile}}</li>
 	    				<li class="list-group-item">Visits from Desktop: {{item.numDesktop}}</li>
 	    			</ul>
-		 		</ul>
-		 		<hr bold/>
+	    
+		 		
+	
+					<ul class="list-group">Visits by different users: {{ total }}
+	    				<li class="list-group-item">Visits from Chrome: {{ numChrome }}</li>
+	    				<li class="list-group-item">Visits from Safari: {{ numSafari }}</li>
+	    				<li class="list-group-item">Visits from Firefox: {{ numFirefox }}</li>
+	    				<li class="list-group-item">Visits from Mobile: {{ numMobile }}</li>
+	    				<li class="list-group-item">Visits from Desktop: {{ numDesktop }}</li>
+	    			</ul>
+	
+				</ul>
+		 		<hr />
 		 	{% endfor %}
         </div>
 		
